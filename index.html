@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/saldocerto/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#000000" />
+    <title>Fluxo — gestão financeira pessoal</title>
+    <script>
+      (function () {
+        try {
+          var raw = localStorage.getItem('fluxo:v1');
+          var saved = raw ? JSON.parse(raw) : null;
+          // Mesma regra do store: só vale "claro" se a pessoa escolheu no
+          // botão. Sem isso a tela pisca branca antes do React assumir.
+          var theme = saved && saved.themeChosen === true ? saved.theme : 'dark';
+          if (theme !== 'light' && theme !== 'dark') theme = 'dark';
+          document.documentElement.setAttribute('data-theme', theme);
+        } catch (e) {}
+
+        // As cores precisam valer já na primeira pintura: os gráficos leem
+        // as variáveis de cor no primeiro render.
+        try {
+          var ACCENTS = {
+            positivo: { cssVar: '--color-positive', bgVar: '--color-positive-bg', options: { esmeralda: ['#00734d', '#00ff88'], ambar: ['#935d15', '#f2b563'], ouro: ['#8f7014', '#e8c169'], cobre: ['#a15a1f', '#e89a5c'], oliva: ['#6f7a1a', '#b9c65c'], mostarda: ['#8f6a10', '#dfae4a'], verde: ['#3f7d3a', '#7bc76f'] } },
+            negativo: { cssVar: '--color-negative', bgVar: '--color-negative-bg', options: { vermelho: ['#d4002d', '#ff2d55'], coral: ['#ab4527', '#e67e5f'], vinhovivo: ['#99253a', '#e6607f'], terracotavivo: ['#a8541f', '#e0955c'], rosachoque: ['#99236f', '#d968a8'], vermelhotijolo: ['#8f3226', '#d97a63'], roxoalerta: ['#7a2f6e', '#c26bb5'] } },
+            foco: { cssVar: '--color-info', bgVar: '--color-info-bg', options: { petroleo: ['#2c4147', '#8fbec6'], azul: ['#1f5a8a', '#7fb3e0'], turquesa: ['#1a7d78', '#6fd0c8'], roxo: ['#4a3a8a', '#a89ae0'], azulpetroleo: ['#3b4753', '#9db0c1'], lilas: ['#5a4a8f', '#b0a0e0'] } },
+          };
+          var perfil = localStorage.getItem('fluxo:profile');
+          var parsed = perfil ? JSON.parse(perfil) : null;
+          var colors = (parsed && parsed.colors) || {};
+          var root = document.documentElement;
+          var dark = theme === 'dark';
+          Object.keys(ACCENTS).forEach(function (role) {
+            var def = ACCENTS[role];
+            // Precisa bater com DEFAULT_COLORS do profileContext, senão a
+            // primeira pintura usa um acento e o React troca logo depois.
+            var FALLBACK = { positivo: 'esmeralda', negativo: 'vermelho', foco: 'turquesa' };
+            var chosen = def.options[colors[role]] || def.options[FALLBACK[role]];
+            var hex = dark ? chosen[1] : chosen[0];
+            root.style.setProperty(def.cssVar, hex);
+            root.style.setProperty(def.bgVar, 'color-mix(in srgb, ' + hex + ' ' + (dark ? 18 : 15) + '%, transparent)');
+            if (role === 'foco') {
+              root.style.setProperty('--color-focus', dark ? hex : 'color-mix(in srgb, ' + hex + ' 92%, white)');
+            }
+          });
+        } catch (e) {}
+      })();
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script type="module" crossorigin src="/saldocerto/assets/index-CHyH5n5K.js"></script>
+    <link rel="stylesheet" crossorigin href="/saldocerto/assets/index-DqzfZVfi.css">
+  <link rel="manifest" href="/saldocerto/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/saldocerto/registerSW.js"></script></head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
