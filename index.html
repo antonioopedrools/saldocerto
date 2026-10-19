@@ -20,6 +20,12 @@
           var theme = saved && saved.themeChosen === true ? saved.theme : 'dark';
           if (theme !== 'light' && theme !== 'dark') theme = 'dark';
           document.documentElement.setAttribute('data-theme', theme);
+          // Instalado no celular, a barra de status do sistema copia esta
+          // meta. Fixa no preto, ela deixava uma faixa escura em cima do app
+          // claro — o detalhe que denuncia "isso e um site". Aqui vai o valor
+          // cru porque o CSS ainda nao carregou; espelha --color-canvas.
+          var m = document.querySelector('meta[name="theme-color"]');
+          if (m) m.content = theme === 'light' ? '#ffffff' : '#000000';
         } catch (e) {}
       })();
     </script>
@@ -29,11 +35,11 @@
       href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
-    <script type="module" crossorigin src="/saldocerto/assets/index-B9wSRYYp.js"></script>
+    <script type="module" crossorigin src="/saldocerto/assets/index-CurhWou5.js"></script>
     <link rel="modulepreload" crossorigin href="/saldocerto/assets/rolldown-runtime-Bh1tDfsg.js">
     <link rel="stylesheet" crossorigin href="/saldocerto/assets/index-D9DX5bjN.css">
   <link rel="manifest" href="/saldocerto/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/saldocerto/registerSW.js"></script></head>
   <body>
-    <div id="root"></div>
+    <div id="root"></div>
   </body>
 </html>
